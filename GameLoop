@@ -1,0 +1,93 @@
+using System;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class GameLoop : MonoBehaviour
+{
+    // Public variables to allow setting from the Unity Editor
+    public Player player; // Reference to the Player object
+    private int score; // Holds the current score
+    public Text scoreText; // UI Text component to display the score
+    public GameObject playButton; // Reference to the Play button object in the UI
+    public GameObject gameOver; // Reference to the GameOver screen object in the UI
+
+
+
+    private void Awake()
+    {
+        // Sets the target frame rate to 30 FPS
+        Application.targetFrameRate = 30;
+
+
+        // Hides the game over screen initially
+        gameOver.SetActive(false);
+
+        // Pauses the game when the scene starts
+        Pause();
+    }
+    public void Play()
+    {
+        // Finds the Player GameObject in the scene
+        GameObject Sprite = GameObject.Find("Player"); // Note: GameObject.Find() can be slow and should be avoided when possible
+        player.enabled = true;
+
+        // Resets the score to 0 at the start of a new game
+        score = 0;
+
+        // Resets the player's position to the start location (0, 0, 10)
+        Sprite.GetComponent<Transform>().position = new Vector3(0F, 0F, 10f);
+
+        // Updates the score text UI
+        scoreText.text = score.ToString();
+
+        // Hides the play button and game over screen
+        playButton.SetActive(false);
+        gameOver.SetActive(false);
+
+        // Resumes game time (time scale set to 1)
+        Time.timeScale = 1f;
+
+
+
+
+
+
+
+        /*Pipes[] pipes = FindObjectOfType<Pipes>();
+        for (int i = 0; i < pipes.Length; i++)
+        {
+            Destroy(pipes[i].gameObject);
+        }*/
+    }
+    public void Pause()
+    {
+        // Freezes time by setting time scale to 0
+        Time.timeScale = 0f;
+
+        // Disables the player controls (player script)
+        player.enabled = false;
+
+    }
+    public void GameOver()
+    {
+        // Activates the game over screen
+        gameOver.SetActive(true);
+
+        // Displays the play button to allow the player to restart
+        playButton.SetActive(true);
+
+        // Pauses the game
+        Pause();
+    }
+
+
+    public void IncreaseScore()
+    {
+        // Increments the score by 1
+        score++;
+
+        // Updates the score text UI to reflect the new score
+        scoreText.text = score.ToString();
+
+    }
+}
