@@ -1,0 +1,42 @@
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms;
+
+public class Pipes : MonoBehaviour
+{
+    // Public variable to control the speed of the object’s movement
+    public float speed = 1.0f;
+
+    // Private variable to store the x-coordinate of the left edge of the screen
+    private float leftEdge;
+
+    // Start is called before the first frame update
+    private void Start()
+    {
+        // Calculate the position of the left edge of the screen in world space
+        // Camera.main.ScreenToWorldPoint(Vector3.zero) gives the world position of the bottom-left corner of the screen
+        // Subtracting 1f ensures the object moves off the screen just before disappearing
+        leftEdge = Camera.main.ScreenToWorldPoint(Vector3.zero).x - 1f;
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        // Move the object to the left every frame by a certain amount, determined by the speed
+        // Vector3.left is a shorthand for the vector (-1, 0, 0) which represents leftward movement
+        // Time.deltaTime ensures the movement is frame-rate independent (i.e., consistent across different frame rates)
+        transform.position += Vector3.left * speed * Time.deltaTime;
+
+        // Check if the object has moved past the left edge of the screen
+        if (transform.position.x < leftEdge)
+        {
+            // If the object has moved past the left edge, destroy it
+            Destroy(gameObject);
+        }
+        else if (Time.deltaTime == 0)
+        {
+            // If Time.deltaTime is 0 (which can happen in certain situations, like when the game is paused), destroy the object
+            Destroy(gameObject);
+        }
+    }
+}
