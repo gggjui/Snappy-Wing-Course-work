@@ -1,0 +1,40 @@
+using UnityEngine;
+
+public class Spawner : MonoBehaviour
+{
+    // Reference to the GameObject prefab that will be instantiated.
+    public GameObject prefab;
+
+    // Time interval (in seconds) between spawns.
+    public float spawnrate = 1f;
+
+    // Minimum vertical offset (in world space) for the spawned object.
+    public float minheight = -1f;
+
+    // Maximum vertical offset (in world space) for the spawned object.
+    public float maxheight = 1f;
+
+    // Called when the object becomes enabled and active.
+    private void OnEnable()
+    {
+        // Repeatedly call the Spawn method at intervals defined by spawnrate.
+        InvokeRepeating(nameof(Spawn), spawnrate, spawnrate);
+    }
+
+    // Called when the object is disabled.
+    private void OnDisable()
+    {
+        // Stop invoking the Spawn method when the object is disabled.
+        CancelInvoke(nameof(Spawn));
+    }
+
+    // This method handles the actual spawning of the prefab object.
+    private void Spawn()
+    {
+        // Instantiate the prefab at the position of this GameObject with no rotation (Quaternion.identity).
+        GameObject pipes = Instantiate(prefab, transform.position, Quaternion.identity);
+
+        // Add a random vertical offset (between minheight and maxheight) to the instantiated object.
+        pipes.transform.position += Vector3.up * Random.Range(minheight, maxheight);
+    }
+}
