@@ -1,0 +1,23 @@
+using UnityEngine;
+
+public class Parallex_BG : MonoBehaviour
+{
+    // Private variable to store the reference to the MeshRenderer component
+    private MeshRenderer meshRenderer;
+
+    // Public variable to control the animation speed of the background
+    public float animationSpeed = 1;
+
+    // Awake is called when the script instance is being loaded (before Start)
+    private void Awake()
+    {
+        // Get the MeshRenderer component attached to the GameObject
+        meshRenderer = GetComponent<MeshRenderer>();
+    }
+    private void Update()
+    {
+        // Updates the texture offset on the material to animate the background
+        // The texture moves along the x-axis based on the animationSpeed and the frame's delta time
+        meshRenderer.material.mainTextureOffset += new Vector2(animationSpeed * Time.deltaTime, 0);
+    }
+}
