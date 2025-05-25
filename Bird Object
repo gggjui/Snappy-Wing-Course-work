@@ -1,0 +1,57 @@
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class Player : MonoBehaviour
+{
+    private SpriteRenderer SpriteRenderer;
+    public Sprite[] sprites;
+    private int spriteIndex;
+
+
+    private Vector3 direction;
+    public float gravity = -9.8f;
+    public float strength = 5f;
+
+
+    private void Start()
+    {
+        InvokeRepeating(nameof(AnimateSprite), 0.15f, 0.15f); //Shuffle the sprites every 0.15s after waiting 0.15s giving the illusion of flight
+    }
+    private void Awake()
+    {
+        SpriteRenderer = GetComponent<SpriteRenderer>();//Fetches the sprites that are present in the game object
+    }
+    private void Update()
+   {
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) // Checks for input
+        {
+            direction = Vector3.up * strength; // Positive upthrust for the sprite
+        }
+
+        direction.y += gravity * Time.deltaTime; // Abstration of gravity and is multiplied by initial value to represent acceleration
+        transform.position += direction * Time.deltaTime; // Abstraction of jump 
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Pipes") // If collison detected between player and any obstacle with the tag
+        {
+            FindAnyObjectByType<GameLoop>().GameOver(); // Travels to the game over funtion within gameloop
+        }
+        else if (other.gameObject.tag == "Scoring") // If collision detacted with the invisble barrier or other things with the tag
+        {
+            FindAnyObjectByType<GameLoop>().IncreaseScore(); // Travels to the increase score function within the gameloop
+        }
+    }
+    
+    private void AnimateSprite()
+    {
+        spriteIndex++;
+        if (spriteIndex >= sprites.Length)
+        {
+            spriteIndex = 0;
+        }
+
+        SpriteRenderer.sprite = sprites[spriteIndex];
+
+    }
+}
